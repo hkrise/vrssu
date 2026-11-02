@@ -1,0 +1,286 @@
+---
+import { Image } from 'astro:assets';
+import StudentsLayout from '../../layouts/StudentsLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import SubNav from '../../components/SubNav.astro';
+import { afterYouReturnTabs } from '../../data/nav';
+import { whatWeLearn } from '../../data/copy';
+import samplingGraph from '../../assets/afterUback/After you return2-06.png';
+
+const base = import.meta.env.BASE_URL;
+const basePath = base.endsWith('/') ? base : `${base}/`;
+
+function hrefFor(path: string) {
+  return `${basePath}${path.replace(/^\/+/, '')}`;
+}
+
+const routeLinks = [
+  {
+    number: '01',
+    label: 'Theory',
+    href: '/students/afterUreturn',
+    detail: 'Mean, SD, SE',
+  },
+  {
+    number: '02',
+    label: 'Sample data',
+    href: '/students/samplingEffortTaiTam',
+    detail: 'Learn the plot',
+  },
+  {
+    number: '03',
+    label: 'Survey upload',
+    href: '/students/dataAnalysis',
+    detail: 'Apply the method',
+  },
+  {
+    number: '04',
+    label: 'Synthesis',
+    href: '/students/wtcanweLearn',
+    detail: 'Interpret carefully',
+  },
+];
+---
+
+<StudentsLayout title="VRSSU · What can we learn" wide>
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'After you return', href: '/students/afterUreturn' },
+      { label: 'What can we learn' },
+    ]}
+  />
+  <SubNav tabs={afterYouReturnTabs} />
+
+  <header class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
+    <div>
+      <p class="text-sm font-bold uppercase tracking-[0.15em] text-tide-600">
+        Analysis route · 04 of 04
+      </p>
+      <h1 class="page-title mt-2">What can we learn from sampling effort?</h1>
+      <p class="mt-4 max-w-3xl text-lg leading-relaxed text-muted">
+        Bring the method and graph together: describe the pattern, distinguish natural variation
+        from uncertainty, and keep the conclusion within the limits of the sample.
+      </p>
+      <div class="mt-5 flex flex-wrap gap-2 text-sm font-semibold text-tide-900">
+        <span class="rounded-full border border-tide-900/10 bg-white px-3 py-1.5">
+          Estimated reading: 5–7 min
+        </span>
+        <span class="rounded-full border border-tide-900/10 bg-white px-3 py-1.5">
+          Final synthesis
+        </span>
+        <span class="rounded-full border border-tide-900/10 bg-white px-3 py-1.5">
+          No quiz required
+        </span>
+      </div>
+    </div>
+
+    <aside class="panel p-5 md:p-6" aria-label="Learning objectives">
+      <p class="text-xs font-bold uppercase tracking-[0.13em] text-tide-600">
+        By the end, you should be able to
+      </p>
+      <ul class="mt-3 space-y-3 text-sm leading-relaxed text-ink/85">
+        <li class="flex gap-2">
+          <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-tide-500" aria-hidden="true"></span>
+          <span>Describe whether a running mean is becoming more stable.</span>
+        </li>
+        <li class="flex gap-2">
+          <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-tide-500" aria-hidden="true"></span>
+          <span>Explain why SD and SE may tell different parts of the story.</span>
+        </li>
+        <li class="flex gap-2">
+          <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-tide-500" aria-hidden="true"></span>
+          <span>Write a conclusion that acknowledges species and site limits.</span>
+        </li>
+      </ul>
+    </aside>
+  </header>
+
+  <nav class="mt-10" aria-label="Analysis route">
+    <ol class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        routeLinks.map((item, index) => (
+          <li class="relative">
+            <a
+              class:list={[
+                'block h-full rounded-xl border px-4 py-3 no-underline shadow-sm transition hover:-translate-y-0.5 hover:no-underline hover:shadow-md',
+                index === routeLinks.length - 1
+                  ? 'border-tide-600/40 bg-tide-950 text-white hover:text-white'
+                  : 'border-tide-900/10 bg-white text-tide-950 hover:border-tide-600/35 hover:text-tide-950',
+              ]}
+              href={hrefFor(item.href)}
+              aria-current={index === routeLinks.length - 1 ? 'page' : undefined}
+            >
+              <span
+                class:list={[
+                  'text-xs font-bold uppercase tracking-[0.12em]',
+                  index === routeLinks.length - 1 ? 'text-tide-200' : 'text-tide-600',
+                ]}
+              >
+                {item.number} · {index === routeLinks.length - 1 ? 'You are here' : 'Review'}
+              </span>
+              <span class="mt-1 block font-display text-xl font-semibold">{item.label}</span>
+              <span
+                class:list={[
+                  'mt-1 block text-sm',
+                  index === routeLinks.length - 1 ? 'text-white/70' : 'text-muted',
+                ]}
+              >
+                {item.detail}
+              </span>
+            </a>
+            {
+              index < routeLinks.length - 1 && (
+                <span class="absolute -right-2.5 top-1/2 z-10 hidden -translate-y-1/2 rounded-full bg-sand-50 text-tide-400 lg:block" aria-hidden="true">
+                  →
+                </span>
+              )
+            }
+          </li>
+        ))
+      }
+    </ol>
+  </nav>
+
+  <main class="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(18rem,0.8fr)] lg:items-start">
+    <article class="space-y-8">
+      <section class="panel" aria-labelledby="read-plot-heading">
+        <p class="text-xs font-bold uppercase tracking-[0.13em] text-tide-600">
+          Field-note synthesis
+        </p>
+        <h2 id="read-plot-heading" class="section-title mt-1">Read the plot in three passes</h2>
+        <ol class="mt-5 grid gap-4 sm:grid-cols-3">
+          <li class="rounded-xl border border-tide-900/10 bg-tide-50 p-4">
+            <span class="font-display text-3xl font-semibold text-tide-300" aria-hidden="true">1</span>
+            <h3 class="mt-1 font-display text-xl font-semibold text-tide-950">Centre</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink/80">
+              Does the running mean still jump as quadrats are added, or does it settle within a
+              narrower range?
+            </p>
+          </li>
+          <li class="rounded-xl border border-tide-900/10 bg-tide-50 p-4">
+            <span class="font-display text-3xl font-semibold text-tide-300" aria-hidden="true">2</span>
+            <h3 class="mt-1 font-display text-xl font-semibold text-tide-950">Spread</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink/80">
+              Use SD to describe how different the quadrat counts are from one another.
+            </p>
+          </li>
+          <li class="rounded-xl border border-tide-900/10 bg-tide-50 p-4">
+            <span class="font-display text-3xl font-semibold text-tide-300" aria-hidden="true">3</span>
+            <h3 class="mt-1 font-display text-xl font-semibold text-tide-950">Precision</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink/80">
+              Use SE to describe uncertainty in the mean, then compare the pattern among species.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <figure class="edu-figure">
+        <Image
+          src={samplingGraph}
+          alt="Example running-mean plots with standard deviation and standard error bars as sample size increases"
+          widths={[640, 960, 1280]}
+          sizes="(max-width: 1024px) 100vw, 42rem"
+          class="w-full bg-white shadow-md"
+        />
+        <figcaption class="caption mt-3">
+          Example only: inspect the direction and stability of the mean as well as the changing
+          error bars. Your species may show a different pattern.
+        </figcaption>
+      </figure>
+
+      <section class="panel" aria-labelledby="interpretation-heading">
+        <h2 id="interpretation-heading" class="section-title">Interpretation</h2>
+        <div class="prose-edu mt-4" set:html={whatWeLearn.text} />
+      </section>
+    </article>
+
+    <aside class="space-y-6 lg:sticky lg:top-28">
+      <section class="rounded-2xl border border-tide-900/10 bg-tide-950 p-6 text-white">
+        <p class="text-xs font-bold uppercase tracking-[0.13em] text-tide-200">
+          A defensible conclusion
+        </p>
+        <h2 class="mt-1 font-display text-2xl font-semibold">Use claim + evidence + limit</h2>
+        <div class="mt-5 space-y-4 text-sm leading-relaxed">
+          <p>
+            <strong class="text-white">Claim:</strong>
+            state whether the abundance estimate became reasonably stable over the sampled
+            quadrats.
+          </p>
+          <p>
+            <strong class="text-white">Evidence:</strong>
+            cite where the running mean changed less and describe the SD or SE pattern.
+          </p>
+          <p>
+            <strong class="text-white">Limit:</strong>
+            name the species, site, tidal height, timing, and number of quadrats represented.
+          </p>
+        </div>
+      </section>
+
+      <section class="panel p-5 md:p-6">
+        <p class="text-xs font-bold uppercase tracking-[0.13em] text-tide-600">Check your wording</p>
+        <ul class="mt-3 space-y-3 text-sm leading-relaxed text-ink/85">
+          <li class="flex gap-2">
+            <span class="font-bold text-kelp" aria-hidden="true">✓</span>
+            <span>“The estimate became more stable in this sampling sequence.”</span>
+          </li>
+          <li class="flex gap-2">
+            <span class="font-bold text-coral" aria-hidden="true">×</span>
+            <span>“This number is the true abundance for the whole shore.”</span>
+          </li>
+          <li class="flex gap-2">
+            <span class="font-bold text-kelp" aria-hidden="true">✓</span>
+            <span>“More quadrats may be needed for rare or clumped species.”</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="rounded-2xl border border-tide-900/10 bg-sand-100/70 p-5">
+        <p class="text-xs font-bold uppercase tracking-[0.13em] text-tide-600">Apply the synthesis</p>
+        <h2 class="mt-1 font-display text-2xl font-semibold text-tide-950">
+          Repeat with your own counts
+        </h2>
+        <p class="mt-2 text-sm leading-relaxed text-muted">
+          The upload tool reads the survey template in your browser. Return here after comparing
+          the running mean, SD, and SE.
+        </p>
+        <a class="btn-primary mt-4 w-full" href={hrefFor('/students/dataAnalysis')}>
+          Plot your survey data
+          <span aria-hidden="true">→</span>
+        </a>
+        <a class="btn-secondary mt-2 w-full" href={hrefFor('/students/samplingEffortTaiTam')}>
+          Revisit sample data
+        </a>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-tide-900/10 pt-8">
+    <p class="max-w-2xl text-sm leading-relaxed text-muted">
+      You have reached the end of the guided analysis route. Browser “opened” cues are for
+      wayfinding only; there is no account record or completion certificate.
+    </p>
+    <a class="btn-secondary" href={hrefFor('/dashboard')}>
+      Return to the student field guide
+    </a>
+  </footer>
+
+  <script>
+    type OpenedProgress = { opened: string[]; last?: string };
+
+    function markOpened(key: string, id: string) {
+      try {
+        const saved = JSON.parse(localStorage.getItem(key) || '{}') as OpenedProgress;
+        const opened = Array.isArray(saved.opened) ? saved.opened : [];
+        if (!opened.includes(id)) opened.push(id);
+        localStorage.setItem(key, JSON.stringify({ opened, last: id }));
+      } catch {
+        // The synthesis remains fully usable when browser storage is unavailable.
+      }
+    }
+
+    markOpened('vrssu-journey-opened-v1', 'after');
+    markOpened('vrssu-analysis-opened-v1', 'synthesis');
+  </script>
+</StudentsLayout>

@@ -1,0 +1,62 @@
+---
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const basePath = base.endsWith('/') ? base : `${base}/`;
+
+function hrefFor(path: string) {
+  if (/^(?:[a-z][a-z\d+.-]*:|\/\/|#)/i.test(path)) return path;
+  if (path === '/') return basePath;
+  return `${basePath}${path.replace(/^\/+/, '')}`;
+}
+---
+
+<nav class="mb-5" aria-label="Breadcrumb">
+  <ol class="breadcrumb-list">
+    {
+      items.map((item, i) => {
+        const isCurrent = i === items.length - 1;
+        return (
+        <li class="flex min-w-0 items-center gap-1.5">
+          {i > 0 && (
+            <svg
+              class="h-3.5 w-3.5 shrink-0 text-tide-300"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              aria-hidden="true"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m6 3 4.5 5L6 13"></path>
+            </svg>
+          )}
+          {item.href ? (
+            <a
+              href={hrefFor(item.href)}
+              class="breadcrumb-link"
+              aria-current={isCurrent ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          ) : (
+            <span
+              class:list={['truncate', isCurrent ? 'font-semibold text-ink' : 'text-muted']}
+              aria-current={isCurrent ? 'page' : undefined}
+            >
+              {item.label}
+            </span>
+          )}
+        </li>
+        );
+      })
+    }
+  </ol>
+</nav>

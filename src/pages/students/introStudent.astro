@@ -1,0 +1,75 @@
+---
+import StudentsLayout from '../../layouts/StudentsLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Stepper from '../../components/vue/Stepper.vue';
+import { intro } from '../../data/copy';
+
+import s1a from '../../assets/indexImg/Shore photo-01.png';
+import s1b from '../../assets/indexImg/Shore photo-02.png';
+import s1c from '../../assets/indexImg/Shore photo-03.png';
+import s1d from '../../assets/indexImg/Shore photo-04.png';
+import s2a from '../../assets/introP1/Introduction-01.png';
+import s2b from '../../assets/introP1/Introduction-02.png';
+import s2c from '../../assets/introP1/Introduction-03.png';
+import s2d from '../../assets/introP1/Introduction-04.png';
+import s3a from '../../assets/introP2/Introduction-05.png';
+import s3b from '../../assets/introP2/Introduction-06.png';
+import s3c from '../../assets/introP2/Introduction-07.png';
+import s3d from '../../assets/introP2/Introduction-08.png';
+
+const base = import.meta.env.BASE_URL;
+
+const steps = [
+  {
+    title: 'Rocky shores: excellent natural laboratories',
+    html: intro.introExtra,
+    images: [
+      { src: s1a.src, alt: 'Rocky shore photo 1' },
+      { src: s1b.src, alt: 'Rocky shore photo 2' },
+      { src: s1c.src, alt: 'Rocky shore photo 3' },
+      { src: s1d.src, alt: 'Rocky shore photo 4' },
+    ],
+  },
+  {
+    title: 'How do we measure the abundance of organisms?',
+    html: `<p>${intro.introP1}</p><p>${intro.introP2}</p>`,
+    images: [
+      { src: s2a.src, alt: 'Dense intertidal assemblages' },
+      { src: s2b.src, alt: 'Organisms covering the rock surface' },
+      { src: s2c.src, alt: 'High abundance on the shore' },
+      { src: s2d.src, alt: 'Quadrat-scale sampling context' },
+    ],
+  },
+  {
+    title: 'Take representative samples!',
+    html: `<p>${intro.introP3}</p>`,
+    images: [
+      { src: s3a.src, alt: 'Placing samples on the shore' },
+      { src: s3b.src, alt: 'Replicate quadrats' },
+      { src: s3c.src, alt: 'Recording counts' },
+      { src: s3d.src, alt: 'Representative sampling design' },
+    ],
+  },
+];
+---
+
+<StudentsLayout title="VRSSU · Introduction" wide>
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Students', href: '/dashboard' },
+      { label: 'Introduction' },
+    ]}
+  />
+  <h1 class="page-title mb-6">Introduction</h1>
+  <p class="mb-6 max-w-3xl text-base text-muted md:text-lg">
+    Estimated time: 12–15 minutes. Work through three short steps, then continue to field preparation.
+  </p>
+  <Stepper
+    client:load
+    steps={steps}
+    storageKey="vrssu-stepper-intro"
+    nextHref={`${base}students/beforeUgo`}
+    nextLabel="Next section: Before you go"
+  />
+</StudentsLayout>

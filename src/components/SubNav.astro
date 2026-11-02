@@ -1,0 +1,125 @@
+---
+interface Tab {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  tabs: readonly Tab[];
+  currentPath?: string;
+}
+
+const { tabs, currentPath = Astro.url.pathname } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const basePath = base.endsWith('/') ? base : `${base}/`;
+
+function normalizePath(path: string) {
+  const pathname = path.split(/[?#]/, 1)[0] || '/';
+  const withLeadingSlash = pathname.startsWith('/') ? pathname : `/${pathname}`;
+  return withLeadingSlash.replace(/\/+$/, '') || '/';
+}
+
+function hrefFor(path: string) {
+  if (path === '/') return basePath;
+  return `${basePath}${path.replace(/^\/+/, '')}`;
+}
+
+function isActive(href: string) {
+  const path = normalizePath(currentPath);
+  return path === normalizePath(hrefFor(href)) || path === normalizePath(href);
+}
+
+const activeIndex = tabs.findIndex((tab) => isActive(tab.href));
+const prev = activeIndex > 0 ? tabs[activeIndex - 1] : null;
+const next =
+  activeIndex >= 0 && activeIndex < tabs.length - 1 ? tabs[activeIndex + 1] : null;
+---
+
+<nav class="mb-10" aria-label="Section pages">
+  <p class="mb-2 text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-tide-600">
+    In this section
+  </p>
+  <div
+    class="section-tab-scroller -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0"
+    data-section-tab-scroller
+  >
+    <ul class="section-tabs">
+      {
+        tabs.map((tab, index) => {
+          const active = isActive(tab.href);
+          return (
+            <li>
+              <a
+                href={hrefFor(tab.href)}
+                class:list={['section-tab', active && 'is-active']}
+                aria-current={active ? 'page' : undefined}
+              >
+                <span
+                  class:list={[
+                    'mr-2 flex h-5 w-5 items-center justify-center rounded-full text-[0.6875rem] font-bold',
+                    active ? 'bg-tide-700 text-white' : 'bg-tide-100 text-tide-700',
+                  ]}
+                  aria-hidden="true"
+                >
+                  {index + 1}
+                </span>
+                {tab.label}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+
+  {
+    (prev || next) && (
+      <div class="mt-4 flex items-stretch gap-3">
+        {prev ? (
+          <a
+            href={hrefFor(prev.href)}
+            class="section-pager-link group"
+            aria-label={`Previous topic: ${prev.label}`}
+          >
+            <svg
+              class="h-5 w-5 shrink-0 transition-transform group-hover:-translate-x-0.5"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              aria-hidden="true"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m11.5 5-5 5 5 5"></path>
+            </svg>
+            <span class="min-w-0">
+              <span class="section-pager-direction">Previous topic</span>
+              <span class="section-pager-title">{prev.label}</span>
+            </span>
+          </a>
+        ) : null}
+        {next ? (
+          <a
+            href={hrefFor(next.href)}
+            class:list={['section-pager-link group justify-end text-right', !prev && 'ml-auto']}
+            aria-label={`Next topic: ${next.label}`}
+          >
+            <span class="min-w-0">
+              <span class="section-pager-direction">Next topic</span>
+              <span class="section-pager-title">{next.label}</span>
+            </span>
+            <svg
+              class="h-5 w-5 shrink-0 transition-transform group-hover:translate-x-0.5"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              aria-hidden="true"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.5 5 5 5-5 5"></path>
+            </svg>
+          </a>
+        ) : null}
+      </div>
+    )
+  }
+</nav>

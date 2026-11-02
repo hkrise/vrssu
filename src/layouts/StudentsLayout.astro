@@ -1,0 +1,98 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { afterYouReturnTabs, beforeYouGoTabs } from '../data/nav';
+
+interface Props {
+  title?: string;
+  /** Wider column for plots, galleries, and figure-heavy pages. */
+  wide?: boolean;
+}
+
+const { title = 'VRSSU · Students', wide = false } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const basePath = base.endsWith('/') ? base : `${base}/`;
+
+function hrefFor(path: string) {
+  if (path === '/') return basePath;
+  return `${basePath}${path.replace(/^\/+/, '')}`;
+}
+
+function normalizePath(path: string) {
+  const pathname = path.split(/[?#]/, 1)[0] || '/';
+  const withLeadingSlash = pathname.startsWith('/') ? pathname : `/${pathname}`;
+  return withLeadingSlash.replace(/\/+$/, '') || '/';
+}
+
+const curriculumSections = [
+  {
+    href: '/students/introStudent',
+    label: 'Introduction',
+    routes: ['/students/introStudent'],
+  },
+  {
+    href: '/students/beforeUgo',
+    label: 'Before you go',
+    routes: ['/students/beforeUgo', ...beforeYouGoTabs.map((tab) => tab.href)],
+  },
+  {
+    href: '/students/afterUreturn',
+    label: 'After you return',
+    routes: afterYouReturnTabs.map((tab) => tab.href),
+  },
+  {
+    href: '/students/resources',
+    label: 'Resources',
+    routes: ['/students/resources'],
+  },
+] as const;
+
+const currentPath = normalizePath(Astro.url.pathname);
+const activeSectionIndex = curriculumSections.findIndex((section) =>
+  section.routes.some((route) => normalizePath(hrefFor(route)) === currentPath),
+);
+const activeSection =
+  activeSectionIndex >= 0 ? curriculumSections[activeSectionIndex] : undefined;
+const sectionIsCurrent =
+  activeSection && normalizePath(hrefFor(activeSection.href)) === currentPath;
+---
+
+<BaseLayout title={title}>
+  <div
+    class:list={[
+      'mx-auto px-4 py-6 sm:px-6 sm:py-10 lg:py-12',
+      wide ? 'max-w-6xl' : 'max-w-3xl',
+    ]}
+  >
+    {
+      activeSection && (
+        <nav class="curriculum-context mb-6" aria-label="Curriculum context">
+          <svg
+            class="h-4 w-4 shrink-0 text-tide-600"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="8.5"></circle>
+            <path stroke-linecap="round" stroke-linejoin="round" d="m14.8 9.2-1.5 4.1-4.1 1.5 1.5-4.1 4.1-1.5Z"></path>
+          </svg>
+          <a href={hrefFor('/dashboard')}>Student field guide</a>
+          <span class="text-tide-300" aria-hidden="true">/</span>
+          <span class="font-medium text-muted">
+            Section {activeSectionIndex + 1} of {curriculumSections.length}
+          </span>
+          <span class="text-tide-300" aria-hidden="true">·</span>
+          <a
+            href={hrefFor(activeSection.href)}
+            class="text-tide-950"
+            aria-current={sectionIsCurrent ? 'page' : 'location'}
+          >
+            {activeSection.label}
+          </a>
+        </nav>
+      )
+    }
+    <slot />
+  </div>
+</BaseLayout>

@@ -1,0 +1,43 @@
+---
+import StudentsLayout from '../../layouts/StudentsLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import SubNav from '../../components/SubNav.astro';
+import LearningCallout from '../../components/LearningCallout.astro';
+import DataAnalysisIsland from '../../components/vue/DataAnalysisIsland.vue';
+import { afterYouReturnTabs } from '../../data/nav';
+
+const base = import.meta.env.BASE_URL;
+const basePath = base.endsWith('/') ? base : `${base}/`;
+---
+
+<StudentsLayout title="VRSSU · Data analysis" wide>
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'After you return', href: '/students/afterUreturn' },
+      { label: 'Data analysis' },
+    ]}
+  />
+  <SubNav tabs={afterYouReturnTabs} />
+  <h1 class="page-title mb-2">Plot your survey data</h1>
+  <p class="mb-6 max-w-3xl text-base text-muted md:text-lg">
+    Download the template, fill in your quadrat counts, then upload the spreadsheet to visualise
+    sampling effort. Files are parsed in your browser and are not uploaded to a server.
+  </p>
+
+  <div class="mb-8">
+    <LearningCallout
+      id="upload-objective"
+      title="Apply the same effort logic to your counts"
+      variant="objective"
+    >
+      <p>
+        After loading a spreadsheet, repeat the three plot steps you used with the Tai Tam sample:
+        choose a species, increase effort, and compare mean ± SD with mean ± SE. Then continue to
+        <a href={`${basePath}students/wtcanweLearn`}>What can we learn</a>.
+      </p>
+    </LearningCallout>
+  </div>
+
+  <DataAnalysisIsland client:load />
+</StudentsLayout>

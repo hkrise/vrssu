@@ -1,0 +1,287 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { dashboard } from '../data/copy';
+import introductionImage from '../assets/dashboard/Description (1).png';
+import beforeImage from '../assets/dashboard/Description (2).png';
+import afterImage from '../assets/afterUback/After you return2-04.png';
+import resourcesImage from '../assets/dashboard/Description (4).png';
+
+const base = import.meta.env.BASE_URL;
+const basePath = base.endsWith('/') ? base : `${base}/`;
+
+function hrefFor(path: string) {
+  return `${basePath}${path.replace(/^\/+/, '')}`;
+}
+
+const sectionImages: Record<string, typeof introductionImage> = {
+  introduction: introductionImage,
+  before: beforeImage,
+  after: afterImage,
+  resources: resourcesImage,
+};
+
+const sectionImageAlts: Record<string, string> = {
+  introduction: 'Rocky shore and open sea',
+  before: 'Researcher counting organisms inside a quadrat',
+  after: 'Transferring rocky-shore field records to a spreadsheet',
+  resources: 'Rocky-shore identification sheets and reference books',
+};
+
+const journeySections = dashboard.sections.map((section) => ({
+  ...section,
+  image: sectionImages[section.id],
+  imageAlt: sectionImageAlts[section.id],
+}));
+---
+
+<BaseLayout title="VRSSU · Student dashboard">
+  <div class="relative overflow-hidden pb-16">
+    <div
+      class="pointer-events-none absolute inset-0 opacity-60"
+      style="background-image: linear-gradient(180deg, var(--color-tide-50), transparent 32rem), radial-gradient(ellipse at 100% 0%, var(--color-sand-100), transparent 42%);"
+    ></div>
+
+    <main class="relative mx-auto max-w-6xl px-4 pt-12 sm:px-6 md:pt-16">
+      <header class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-end">
+        <div>
+          <p class="text-sm font-bold uppercase tracking-[0.16em] text-tide-600">
+            Student field guide
+          </p>
+          <h1 class="page-title mt-2 max-w-3xl">Follow a survey from question to conclusion</h1>
+          <p class="mt-5 max-w-3xl text-lg leading-relaxed text-muted md:text-xl">
+            {dashboard.intro}
+          </p>
+          <div class="mt-6 flex flex-wrap gap-2 text-sm font-semibold text-tide-900">
+            <span class="rounded-full border border-tide-900/10 bg-white/80 px-3 py-1.5">
+              Core route: about 70–90 min
+            </span>
+            <span class="rounded-full border border-tide-900/10 bg-white/80 px-3 py-1.5">
+              3 learning sections + references
+            </span>
+            <span class="rounded-full border border-tide-900/10 bg-white/80 px-3 py-1.5">
+              No account required
+            </span>
+          </div>
+        </div>
+
+        <aside class="panel p-5 md:p-6" aria-label="Continue your field guide">
+          <p class="text-xs font-bold uppercase tracking-[0.14em] text-tide-600">
+            Your next action
+          </p>
+          <h2 class="mt-2 font-display text-2xl font-semibold text-tide-950" data-continue-title>
+            Begin with the introduction
+          </h2>
+          <p class="mt-2 text-sm leading-relaxed text-muted">
+            This browser can remember which sections you opened. It does not mark learning as
+            complete or send progress anywhere.
+          </p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <a
+              class="btn-primary"
+              href={hrefFor(dashboard.sections[0].href)}
+              data-continue-link
+              data-journey-link
+              data-section-id={dashboard.sections[0].id}
+            >
+              Start the field guide
+              <span aria-hidden="true">→</span>
+            </a>
+            <button class="btn-ghost text-sm" type="button" data-clear-progress>
+              Clear opened status
+            </button>
+          </div>
+        </aside>
+      </header>
+
+      <section class="mt-14" aria-labelledby="route-heading">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="text-sm font-bold uppercase tracking-[0.14em] text-tide-600">
+              Recommended route
+            </p>
+            <h2 id="route-heading" class="section-title mt-1">Four stops in the field guide</h2>
+          </div>
+          <p class="max-w-xl text-sm text-muted">
+            “Opened” means this browser followed a section link; it is a wayfinding cue, not an
+            assessment.
+          </p>
+        </div>
+
+        <ol class="mt-7 grid gap-6 md:grid-cols-2">
+          {
+            journeySections.map((section, i) => (
+              <li>
+                <article
+                  class="group h-full overflow-hidden rounded-2xl border border-tide-900/10 bg-white shadow-[0_1px_2px_rgb(8_38_42_/_0.05),0_12px_32px_rgb(8_38_42_/_0.07)]"
+                  data-journey-section
+                  data-section-id={section.id}
+                  data-section-title={section.title}
+                  data-section-href={hrefFor(section.href)}
+                >
+                  <div class="relative aspect-[16/8] overflow-hidden bg-tide-100">
+                    <Image
+                      src={section.image}
+                      alt={section.imageAlt}
+                      widths={[480, 720, 960]}
+                      sizes="(max-width: 768px) 100vw, 36rem"
+                      class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+                    />
+                    <span class="absolute left-4 top-4 rounded-full bg-tide-950/90 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-white">
+                      Stop {i + 1} of {journeySections.length}
+                    </span>
+                  </div>
+
+                  <div class="p-5 sm:p-6">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                      <p class="text-xs font-bold uppercase tracking-[0.13em] text-tide-600">
+                        {section.stage}
+                      </p>
+                      <div class="flex items-center gap-2 text-xs font-semibold text-muted">
+                        <span>{section.effort}</span>
+                        <span aria-hidden="true">·</span>
+                        <span class="inline-flex items-center gap-1.5" aria-live="polite">
+                          <span class="h-2 w-2 rounded-full bg-tide-300" aria-hidden="true" />
+                          <span data-journey-status>Ready</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <h3 class="mt-2 font-display text-2xl font-semibold text-tide-950 md:text-3xl">
+                      <a
+                        href={hrefFor(section.href)}
+                        class="text-tide-950 no-underline hover:text-tide-700 hover:underline"
+                        data-journey-link
+                        data-section-id={section.id}
+                      >
+                        {section.title}
+                      </a>
+                    </h3>
+                    <p class="mt-3 text-base leading-relaxed text-ink/85">{section.text}</p>
+
+                    <div class="mt-5 border-t border-tide-900/10 pt-4">
+                      <p class="text-xs font-bold uppercase tracking-[0.12em] text-muted">
+                        By the end, you should be able to
+                      </p>
+                      <ul class="mt-2 space-y-2 text-sm leading-relaxed text-ink/85">
+                        {section.objectives.map((objective) => (
+                          <li class="flex gap-2">
+                            <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-tide-500" aria-hidden="true" />
+                            <span>{objective}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <a
+                      class="btn-secondary mt-5"
+                      href={hrefFor(section.href)}
+                      data-journey-link
+                      data-section-id={section.id}
+                    >
+                      {section.action}
+                      <span aria-hidden="true">→</span>
+                    </a>
+                  </div>
+                </article>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      <aside class="mt-10 rounded-2xl border border-tide-900/10 bg-tide-950 px-6 py-6 text-white md:flex md:items-center md:justify-between md:gap-8">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.14em] text-tide-200">The data story</p>
+          <p class="mt-2 max-w-3xl font-display text-2xl font-semibold leading-snug">
+            Background theory <span class="text-tide-300">→</span> sample dataset
+            <span class="text-tide-300">→</span> your survey spreadsheet
+            <span class="text-tide-300">→</span> synthesis
+          </p>
+        </div>
+        <a
+          class="mt-5 inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border border-white/25 bg-white px-5 py-2.5 font-semibold text-tide-950 no-underline shadow-sm transition hover:-translate-y-0.5 hover:bg-tide-50 hover:text-tide-950 hover:no-underline md:mt-0"
+          href={hrefFor('/students/afterUreturn')}
+          data-journey-link
+          data-section-id="after"
+        >
+          See the analysis route
+        </a>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const progressKey = 'vrssu-journey-opened-v1';
+    const cards = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-journey-section]'),
+    );
+    const continueLink = document.querySelector<HTMLAnchorElement>('[data-continue-link]');
+    const continueTitle = document.querySelector<HTMLElement>('[data-continue-title]');
+
+    type JourneyProgress = { opened: string[]; last?: string };
+
+    function readProgress(): JourneyProgress {
+      try {
+        const saved = JSON.parse(localStorage.getItem(progressKey) || '{}') as JourneyProgress;
+        return {
+          opened: Array.isArray(saved.opened) ? saved.opened : [],
+          last: typeof saved.last === 'string' ? saved.last : undefined,
+        };
+      } catch {
+        return { opened: [] };
+      }
+    }
+
+    function writeProgress(progress: JourneyProgress) {
+      try {
+        localStorage.setItem(progressKey, JSON.stringify(progress));
+      } catch {
+        // The guide remains fully usable when browser storage is unavailable.
+      }
+    }
+
+    function renderProgress() {
+      const progress = readProgress();
+
+      cards.forEach((card) => {
+        const id = card.dataset.sectionId || '';
+        const status = card.querySelector<HTMLElement>('[data-journey-status]');
+        const dot = status?.previousElementSibling;
+        const wasOpened = progress.opened.includes(id);
+        if (status) status.textContent = wasOpened ? 'Opened here' : 'Ready';
+        dot?.classList.toggle('bg-tide-300', !wasOpened);
+        dot?.classList.toggle('bg-kelp', wasOpened);
+      });
+
+      const lastCard = cards.find((card) => card.dataset.sectionId === progress.last);
+      if (lastCard && continueLink && continueTitle) {
+        continueLink.href = lastCard.dataset.sectionHref || continueLink.href;
+        continueLink.textContent = `Continue ${lastCard.dataset.sectionTitle || 'the field guide'} →`;
+        continueTitle.textContent = `Return to ${lastCard.dataset.sectionTitle || 'your last section'}`;
+      }
+    }
+
+    document.querySelectorAll<HTMLElement>('[data-journey-link]').forEach((link) => {
+      link.addEventListener('click', () => {
+        const id = link.dataset.sectionId;
+        if (!id) return;
+        const progress = readProgress();
+        if (!progress.opened.includes(id)) progress.opened.push(id);
+        progress.last = id;
+        writeProgress(progress);
+      });
+    });
+
+    document.querySelector<HTMLElement>('[data-clear-progress]')?.addEventListener('click', () => {
+      try {
+        localStorage.removeItem(progressKey);
+      } catch {
+        // Nothing to clear when browser storage is unavailable.
+      }
+      renderProgress();
+    });
+
+    renderProgress();
+  </script>
+</BaseLayout>

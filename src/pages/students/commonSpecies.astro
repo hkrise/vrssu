@@ -1,0 +1,61 @@
+---
+import StudentsLayout from '../../layouts/StudentsLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import SubNav from '../../components/SubNav.astro';
+import LearningCallout from '../../components/LearningCallout.astro';
+import SpeciesGallery from '../../components/vue/SpeciesGallery.vue';
+import { beforeYouGoTabs } from '../../data/nav';
+import { speciesClasses, speciesNameFromFile } from '../../data/species';
+
+const modules = import.meta.glob<{ default: { src: string } }>(
+  '../../assets/speciesID/**/*.png',
+  { eager: true },
+);
+
+const groups = speciesClasses.map((group) => ({
+  key: group.key,
+  name: group.name,
+  items: group.files.map((file) => {
+    const path = `../../assets/speciesID/${group.key}/${file}`;
+    const mod = modules[path];
+    return {
+      name: speciesNameFromFile(file),
+      src: mod?.default?.src ?? '',
+    };
+  }).filter((item) => item.src),
+}));
+---
+
+<StudentsLayout title="VRSSU · Common species" wide>
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Before you go', href: '/students/beforeUgo' },
+      { label: 'Common species' },
+    ]}
+  />
+  <SubNav tabs={beforeYouGoTabs} />
+  <h1 class="page-title mb-2">Common species</h1>
+  <p class="mb-6 max-w-3xl text-base text-muted md:text-lg">
+    Browse rocky-shore taxa by group, search scientific names, and zoom images for field
+    identification. Group notes only summarise the usual mobility and abundance measure — follow your
+    protocol on the shore.
+  </p>
+
+  <div class="mb-8">
+    <LearningCallout
+      id="species-gallery-field-note"
+      title="Use names and counting rules together"
+      variant="field-note"
+    >
+      <p>
+        Scientific names appear in <span class="species-name">italics</span>. Select a taxonomic
+        group, search if needed, then open an image with the keyboard (Enter/Space) or a click to
+        zoom. Mobile taxa are usually counted as individuals; sessile mats and colonies are usually
+        scored as percentage cover.
+      </p>
+    </LearningCallout>
+  </div>
+
+  <SpeciesGallery client:visible groups={groups} />
+</StudentsLayout>

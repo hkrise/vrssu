@@ -1,0 +1,86 @@
+---
+import { Image } from 'astro:assets';
+import StudentsLayout from '../../layouts/StudentsLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LearningCallout from '../../components/LearningCallout.astro';
+import SubNav from '../../components/SubNav.astro';
+import GradientVideos from '../../components/vue/GradientVideos.vue';
+import { beforeYouGoTabs } from '../../data/nav';
+import { physicalEnv } from '../../data/copy';
+import envImg from '../../assets/Physical env-01.png';
+import exposedShore from '../../assets/availableSites/shekmeitau/Moderately exposed shore at Shek Mei Tau (Richard Huang).jpg';
+---
+
+<StudentsLayout title="VRSSU · Physical environment" wide>
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Before you go', href: '/students/beforeUgo' },
+      { label: 'Physical environment' },
+    ]}
+  />
+  <SubNav tabs={beforeYouGoTabs} />
+  <h1 class="page-title mb-6">Physical environment</h1>
+
+  <div class="space-y-10">
+    <section class="space-y-4">
+      <h2 class="section-title">Vertical gradient: the rise and fall of tides</h2>
+      <div class="prose-edu">
+        <p>{physicalEnv.p1}</p>
+        <p>{physicalEnv.p1b}</p>
+        <p set:html={physicalEnv.p2} />
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="section-title">Horizontal gradient: wave exposure</h2>
+      <div class="prose-edu">
+        <p>{physicalEnv.p3}</p>
+        <p>{physicalEnv.p4}</p>
+      </div>
+      <figure class="edu-figure">
+        <Image
+          src={exposedShore}
+          alt="Moderately exposed rocky shore at Shek Mei Tau"
+          widths={[640, 960, 1280]}
+          sizes="(max-width: 768px) 100vw, 64rem"
+          class="w-full shadow-md"
+        />
+        <figcaption class="caption mt-3">
+          Moderately exposed shore at Shek Mei Tau (photo: Richard Huang) — wave exposure varies along
+          Hong Kong coasts.
+        </figcaption>
+      </figure>
+    </section>
+
+    <LearningCallout
+      id="physical-environment-field-note"
+      title="Record the conditions behind each sample"
+      variant="field-note"
+    >
+      <p>
+        Note the date, time, survey tidal height, recent weather, and visible wave exposure. These
+        observations help you explain environmental context without treating a single visit as a
+        complete description of the shore.
+      </p>
+    </LearningCallout>
+
+    <figure class="edu-figure">
+      <Image
+        src={envImg}
+        alt="Physical environment diagram showing vertical and horizontal gradients on a rocky shore"
+        widths={[640, 960, 1280]}
+        sizes="(max-width: 768px) 100vw, 64rem"
+        class="w-full"
+      />
+      <figcaption class="caption mt-3">
+        Schematic of vertical (tidal) and horizontal (wave exposure) gradients on a rocky shore.
+      </figcaption>
+    </figure>
+
+    <div>
+      <h2 class="section-title mb-4">Gradient videos</h2>
+      <GradientVideos client:visible />
+    </div>
+  </div>
+</StudentsLayout>

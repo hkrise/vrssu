@@ -1,0 +1,21 @@
+---
+import StudentsLayout from '../../layouts/StudentsLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { acknowledgement } from '../../data/copy';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<StudentsLayout title="VRSSU · Acknowledgements">
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Acknowledgements' },
+    ]}
+  />
+  <h1 class="page-title mb-6">Acknowledgements</h1>
+  <article class="prose-edu" set:html={acknowledgement} />
+  <p class="mt-10">
+    <a href={`${base}dashboard`} class="btn-secondary">Back to student path</a>
+  </p>
+</StudentsLayout>

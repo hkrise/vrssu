@@ -1,0 +1,117 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CollaboratorsStub from '../components/CollaboratorsStub.astro';
+import { home } from '../data/copy';
+import samplingImg from '../assets/media/sampling_high_fedi.jpg';
+
+const base = import.meta.env.BASE_URL;
+const basePath = base.endsWith('/') ? base : `${base}/`;
+---
+
+<BaseLayout title="VRSSU · Virtual Rocky Shore Sampling Unit">
+  <section class="relative min-h-[100svh] overflow-hidden">
+    <video
+      id="hero-video"
+      class="absolute inset-0 h-full w-full object-cover"
+      src={`${basePath}tidersss_1.mp4`}
+      poster={samplingImg.src}
+      muted
+      loop
+      playsinline
+      preload="metadata"
+    ></video>
+    <div class="absolute inset-0 bg-gradient-to-t from-tide-950/85 via-tide-900/45 to-tide-900/25"></div>
+    <div class="relative mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-end px-4 pb-20 pt-28">
+      <p class="text-sm font-bold uppercase tracking-[0.16em] text-white/75">
+        TIDE · Intertidal ecology field guide
+      </p>
+      <h1 class="mt-3 font-display text-4xl font-semibold tracking-tight text-white drop-shadow md:text-6xl">
+        Virtual Rocky Shore Sampling Unit
+      </h1>
+      <p class="mt-4 max-w-xl text-lg text-white/90 md:text-xl">
+        Prepare for shore surveys, practise a repeatable protocol, and see how sampling effort shapes
+        abundance estimates.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a class="btn-primary" href={`${basePath}dashboard`}>Start as a student</a>
+        <CollaboratorsStub />
+        <button
+          id="hero-video-toggle"
+          type="button"
+          class="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/35 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20"
+          aria-controls="hero-video"
+          aria-pressed="false"
+        >
+          Play background video
+        </button>
+      </div>
+      <p class="mt-3 max-w-lg text-sm text-white/70">
+        Video is paused by default. Playback is optional and respects reduced-motion preferences.
+      </p>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden border-t border-tide-900/10 bg-sand-100/60">
+    <div
+      class="pointer-events-none absolute inset-0 opacity-40"
+      style="background-image: radial-gradient(ellipse at 20% 0%, var(--color-tide-100), transparent 55%), radial-gradient(ellipse at 80% 100%, var(--color-sand-100), transparent 50%);"
+    ></div>
+    <div class="relative mx-auto grid max-w-6xl gap-10 px-4 py-16 md:grid-cols-2 md:items-center">
+      <div class="reveal-in space-y-5">
+        <h2 class="section-title">A field guide for undergraduate surveys</h2>
+        <div class="prose-edu" set:html={home.introText1} />
+        <div class="prose-edu" set:html={home.userFlow} />
+        <a class="btn-secondary" href={`${basePath}dashboard`}>Open the student field guide</a>
+      </div>
+      <figure class="edu-figure reveal-in-delay">
+        <Image
+          src={samplingImg}
+          alt="Students conducting quadrat sampling on a rocky shore"
+          widths={[640, 960, 1280]}
+          sizes="(max-width: 768px) 100vw, 36rem"
+          class="w-full shadow-md"
+        />
+        <figcaption class="caption mt-3">Students conducting quadrat sampling</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <script>
+    function bindHeroVideo() {
+      const video = document.getElementById('hero-video');
+      const toggle = document.getElementById('hero-video-toggle');
+      if (!(video instanceof HTMLVideoElement) || !(toggle instanceof HTMLButtonElement)) return;
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      video.pause();
+
+      const syncLabel = () => {
+        const playing = !video.paused;
+        toggle.setAttribute('aria-pressed', playing ? 'true' : 'false');
+        toggle.textContent = playing ? 'Pause background video' : 'Play background video';
+      };
+
+      toggle.onclick = async () => {
+        if (video.paused) {
+          try {
+            await video.play();
+          } catch {
+            /* autoplay policies may still block; label stays accurate */
+          }
+        } else {
+          video.pause();
+        }
+        syncLabel();
+      };
+
+      if (!reduceMotion && window.matchMedia('(min-width: 768px)').matches) {
+        // Desktop default remains paused; user starts playback intentionally.
+      }
+      syncLabel();
+    }
+
+    bindHeroVideo();
+    document.addEventListener('astro:page-load', bindHeroVideo);
+  </script>
+</BaseLayout>

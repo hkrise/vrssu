@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="Page not found · VRSSU">
+  <div class="mx-auto flex max-w-xl flex-col items-start gap-4 px-4 py-24">
+    <p class="text-sm font-semibold uppercase tracking-wide text-tide-600">404</p>
+    <h1 class="page-title">Page not found</h1>
+    <p class="text-muted">That page is not part of the Virtual Rocky Shore Sampling Unit.</p>
+    <a class="btn-primary" href={base}>Back to home</a>
+  </div>
+</BaseLayout>

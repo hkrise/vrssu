@@ -1,0 +1,231 @@
+---
+import { Image } from 'astro:assets';
+import StudentsLayout from '../../layouts/StudentsLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LearningCallout from '../../components/LearningCallout.astro';
+import SubNav from '../../components/SubNav.astro';
+import SelfCheck from '../../components/vue/SelfCheck.vue';
+import { beforeYouGoTabs } from '../../data/nav';
+import { protocol } from '../../data/copy';
+import fig1 from '../../assets/media/Fig.1.png';
+import fig2 from '../../assets/media/Fig.2.png';
+import fig3 from '../../assets/media/Fig.3.png';
+import fig4 from '../../assets/media/Fig.4.png';
+import fig5 from '../../assets/media/Fig.5.png';
+import fig6 from '../../assets/media/Fig.6.png';
+
+const protocolSequenceOptions = [
+  {
+    label:
+      'Find the current tide height → mark the target tidal height → lay the transect along that contour → choose random quadrat positions → place each quadrat consistently → record organisms.',
+    correct: true,
+    feedback:
+      'This sequence establishes a comparable tidal height first, then uses random and standardised placement before any organisms are recorded.',
+  },
+  {
+    label:
+      'Choose organism-rich patches → place quadrats there → lay a tape between them → check the tide height after counting.',
+    correct: false,
+    feedback:
+      'Choosing rich patches introduces selection bias, and checking tidal height afterwards cannot make those samples comparable.',
+  },
+  {
+    label:
+      'Lay a tape straight up the shore → place quadrats at regular visual gaps → count organisms → use the water level only if time allows.',
+    correct: false,
+    feedback:
+      'The transect should follow a defined tidal-height contour, and quadrat positions should be randomly selected rather than judged by eye.',
+  },
+];
+
+const countingApproachOptions = [
+  {
+    label:
+      'Count completely contained mobile individuals, and estimate percentage cover for sessile organisms.',
+    correct: true,
+    feedback:
+      'Mobile animals can be counted as discrete individuals. Sessile organisms often form dense or merged patches, so percentage cover is the repeatable measure.',
+  },
+  {
+    label:
+      'Estimate percentage cover for mobile animals, and count every visible sessile patch as one individual.',
+    correct: false,
+    feedback:
+      'This reverses the protocol: moving animals are counted as individuals, while patch-forming sessile organisms are measured by cover.',
+  },
+  {
+    label:
+      'Count every organism touching the quadrat frame, whether mobile or sessile.',
+    correct: false,
+    feedback:
+      'A clear boundary rule is needed for mobile animals, and a simple individual count is unreliable for sessile colonies and mats.',
+  },
+];
+---
+
+<StudentsLayout title="VRSSU · Sampling protocol" wide>
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Before you go', href: '/students/beforeUgo' },
+      { label: 'Sampling protocol' },
+    ]}
+  />
+  <SubNav tabs={beforeYouGoTabs} />
+  <h1 class="page-title mb-6">Sampling protocol</h1>
+
+  <div class="mb-10">
+    <LearningCallout
+      id="sampling-protocol-objective"
+      title="Use a repeatable survey method"
+      variant="objective"
+    >
+      <p>
+        By the end of this page, you should be able to put the survey steps in order and apply the
+        correct recording rule to mobile and sessile organisms. Figures sit next to the matching
+        instructions so you can check each decision as you read.
+      </p>
+    </LearningCallout>
+  </div>
+
+  <div class="space-y-12">
+    <section class="space-y-6" aria-labelledby="tidal-heights-heading">
+      <h2 id="tidal-heights-heading" class="section-title">
+        Measuring tidal heights and setting transects
+      </h2>
+      <div class="prose-edu">
+        <p>{protocol.measureP1}</p>
+        <p set:html={protocol.measureP2} />
+      </div>
+
+      <figure id="fig-1" class="edu-figure scroll-mt-28 space-y-2">
+        <Image
+          src={fig1}
+          alt="Using a real-time tide graph to determine current water level relative to Chart Datum"
+          widths={[400, 640, 800]}
+          sizes="(max-width: 768px) 100vw, 40rem"
+          class="w-full max-w-2xl rounded-2xl border border-tide-900/10 bg-white"
+        />
+        <figcaption class="caption max-w-2xl">
+          Fig. 1 — Measuring tidal height from the real-time water level (Chart Datum reference).
+        </figcaption>
+      </figure>
+
+      <div class="prose-edu">
+        <p set:html={protocol.measureP3} />
+      </div>
+
+      <figure id="fig-2" class="edu-figure scroll-mt-28 space-y-2">
+        <Image
+          src={fig2}
+          alt="Measuring the vertical difference from the waterline to establish a higher tidal height for a transect"
+          widths={[400, 640, 800]}
+          sizes="(max-width: 768px) 100vw, 40rem"
+          class="w-full max-w-2xl rounded-2xl border border-tide-900/10 bg-white"
+        />
+        <figcaption class="caption max-w-2xl">
+          Fig. 2 — Establishing a survey height by measuring the vertical difference from the
+          real-time water level, then marking the contour for the transect.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="space-y-6" aria-labelledby="quadrat-heading">
+      <h2 id="quadrat-heading" class="section-title">
+        Quadrat surveying and random sampling
+      </h2>
+      <div class="prose-edu">
+        <div set:html={protocol.surveyP1} />
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <figure id="fig-3" class="edu-figure scroll-mt-28 space-y-2">
+          <Image
+            src={fig3}
+            alt="Quadrat placed above the transect with its bottom-left corner on a randomly selected point"
+            widths={[400, 640, 800]}
+            sizes="(max-width: 768px) 100vw, 28rem"
+            class="w-full rounded-2xl border border-tide-900/10 bg-white"
+          />
+          <figcaption class="caption">
+            Fig. 3 — Standardised quadrat placement: bottom-left corner on the random transect
+            point, frame above the line.
+          </figcaption>
+        </figure>
+        <figure id="fig-4" class="edu-figure scroll-mt-28 space-y-2">
+          <Image
+            src={fig4}
+            alt="Several inconsistent ways a quadrat could be placed relative to a transect line"
+            widths={[400, 640, 800]}
+            sizes="(max-width: 768px) 100vw, 28rem"
+            class="w-full rounded-2xl border border-tide-900/10 bg-white"
+          />
+          <figcaption class="caption">
+            Fig. 4 — Inconsistent placement: without a shared rule, researchers may position
+            quadrats differently and create non-comparable counts.
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="prose-edu">
+        <div set:html={protocol.surveyP2} />
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <figure id="fig-5" class="edu-figure scroll-mt-28 space-y-2">
+          <Image
+            src={fig5}
+            alt="Mobile organism counted only when fully inside the quadrat frame"
+            widths={[400, 640, 800]}
+            sizes="(max-width: 768px) 100vw, 28rem"
+            class="w-full rounded-2xl border border-tide-900/10 bg-white"
+          />
+          <figcaption class="caption">
+            Fig. 5 — Mobile animals: count individuals that are completely contained within the
+            quadrat.
+          </figcaption>
+        </figure>
+        <figure id="fig-6" class="edu-figure scroll-mt-28 space-y-2">
+          <Image
+            src={fig6}
+            alt="Double-strung quadrat used to score percentage cover of sessile organisms"
+            widths={[400, 640, 800]}
+            sizes="(max-width: 768px) 100vw, 28rem"
+            class="w-full rounded-2xl border border-tide-900/10 bg-white"
+          />
+          <figcaption class="caption">
+            Fig. 6 — Sessile organisms: score percentage cover with a double-strung point quadrat
+            or a standardised photograph.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <LearningCallout
+      id="sampling-protocol-key-concept"
+      title="Standardise decisions before sampling"
+      variant="key-concept"
+    >
+      <p>
+        A repeatable method specifies the tidal height, random quadrat positions, exact placement,
+        boundary rule, and abundance measure in advance. This reduces differences caused by the
+        investigators rather than the shore.
+      </p>
+    </LearningCallout>
+
+    <div class="grid gap-6 lg:grid-cols-2">
+      <SelfCheck
+        client:load
+        id="protocol-sequence-check"
+        legend="Which sequence best follows the rocky-shore sampling protocol?"
+        options={protocolSequenceOptions}
+      />
+      <SelfCheck
+        client:load
+        id="counting-approach-check"
+        legend="How should mobile and sessile organisms be recorded?"
+        options={countingApproachOptions}
+      />
+    </div>
+  </div>
+</StudentsLayout>

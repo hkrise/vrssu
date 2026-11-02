@@ -1,0 +1,60 @@
+---
+import { Image } from 'astro:assets';
+import StudentsLayout from '../../layouts/StudentsLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LearningCallout from '../../components/LearningCallout.astro';
+import SubNav from '../../components/SubNav.astro';
+import SamplingEffortIsland from '../../components/vue/SamplingEffortIsland.vue';
+import { afterYouReturnTabs } from '../../data/nav';
+import taiTamSite from '../../assets/availableSites/taitam/VR_Tai Tam_Site.jpg';
+
+const base = import.meta.env.BASE_URL;
+const basePath = base.endsWith('/') ? base : `${base}/`;
+---
+
+<StudentsLayout title="VRSSU · Sample data" wide>
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'After you return', href: '/students/afterUreturn' },
+      { label: 'Sample data' },
+    ]}
+  />
+  <SubNav tabs={afterYouReturnTabs} />
+  <h1 class="page-title mb-2">Sample data — Tai Tam</h1>
+  <p class="mb-6 max-w-3xl text-base text-muted md:text-lg">
+    Explore how running mean ± SD / SE change as you increase sampling effort for each species.
+    A short guided tour introduces the three plot controls on first visit.
+  </p>
+
+  <div class="mb-8">
+    <LearningCallout
+      id="taitam-key-concept"
+      title="Practise before uploading your own sheet"
+      variant="key-concept"
+    >
+      <p>
+        Try a common species with few quadrats, then add effort in steps of about 10. Compare SD
+        (spread among quadrats) with SE (uncertainty of the mean). When ready,
+        <a href={`${basePath}students/dataAnalysis`}>plot your survey data</a>
+        or continue to
+        <a href={`${basePath}students/wtcanweLearn`}>synthesis</a>.
+      </p>
+    </LearningCallout>
+  </div>
+
+  <figure class="edu-figure mb-10">
+    <Image
+      src={taiTamSite}
+      alt="Rocky shore sampling site at Tai Tam, Hong Kong"
+      widths={[640, 960, 1280]}
+      sizes="(max-width: 768px) 100vw, 64rem"
+      class="w-full shadow-md"
+    />
+    <figcaption class="caption mt-3">
+      Tai Tam rocky shore — the sample dataset below comes from surveys at this site.
+    </figcaption>
+  </figure>
+
+  <SamplingEffortIsland client:load />
+</StudentsLayout>

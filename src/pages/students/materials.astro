@@ -1,0 +1,71 @@
+---
+import { Image } from 'astro:assets';
+import StudentsLayout from '../../layouts/StudentsLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LearningCallout from '../../components/LearningCallout.astro';
+import SubNav from '../../components/SubNav.astro';
+import { beforeYouGoTabs } from '../../data/nav';
+import { materials } from '../../data/copy';
+import gears from '../../assets/VR_Gears.jpg';
+import equip from '../../assets/Equipment list-01.png';
+---
+
+<StudentsLayout title="VRSSU · What to prepare" wide>
+  <Breadcrumbs
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Before you go', href: '/students/beforeUgo' },
+      { label: 'What to prepare' },
+    ]}
+  />
+  <SubNav tabs={beforeYouGoTabs} />
+  <h1 class="page-title mb-6">What to prepare</h1>
+
+  <div class="space-y-10">
+    <LearningCallout
+      id="materials-safety-callout"
+      title="Check conditions before equipment"
+      variant="safety"
+    >
+      <p>
+        Check the tide and weather before leaving, work with other people, and tell someone where
+        you are going and when you expect to return. Do not start—or remain on the shore—if
+        conditions are unsafe or deteriorating.
+      </p>
+    </LearningCallout>
+
+    <section class="prose-edu space-y-4">
+      <h2 class="section-title">Preparation &amp; precaution</h2>
+      <ul set:html={materials.preparation} />
+      <h3 class="font-display text-xl font-semibold text-tide-900">Survey equipment</h3>
+      <ul set:html={materials.materialsP1} />
+      <h3 class="font-display text-xl font-semibold text-tide-900">Personal kit</h3>
+      <ul set:html={materials.materialsP2} />
+      <h3 class="font-display text-xl font-semibold text-tide-900">Optional extras</h3>
+      <ul set:html={materials.materialsP3} />
+    </section>
+
+    <section class="space-y-6">
+      <figure class="edu-figure">
+        <Image
+          src={gears}
+          alt="Field gear laid out for rocky shore sampling"
+          widths={[640, 960, 1280]}
+          sizes="(max-width: 768px) 100vw, 64rem"
+          class="w-full"
+        />
+        <figcaption class="caption mt-2">Field gear for rocky shore work</figcaption>
+      </figure>
+      <figure class="edu-figure">
+        <Image
+          src={equip}
+          alt="Equipment checklist diagram"
+          widths={[640, 960, 1280]}
+          sizes="(max-width: 768px) 100vw, 64rem"
+          class="w-full"
+        />
+        <figcaption class="caption mt-2">Equipment checklist</figcaption>
+      </figure>
+    </section>
+  </div>
+</StudentsLayout>
