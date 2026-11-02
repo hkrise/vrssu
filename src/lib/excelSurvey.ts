@@ -1,4 +1,4 @@
-import readXlsxFile from 'read-excel-file/browser';
+import { readSheet } from 'read-excel-file/browser';
 import type { SurveyRecord } from './surveyStats';
 
 /**
@@ -6,7 +6,8 @@ import type { SurveyRecord } from './surveyStats';
  * Expected: first column "Species name" (or similar), remaining columns Q1, Q2, …
  */
 export async function parseSurveyExcel(file: File): Promise<SurveyRecord[]> {
-  const rows = await readXlsxFile(file);
+  // read-excel-file v9's default export returns sheet objects, not a row grid.
+  const rows = await readSheet(file);
   if (!rows.length) return [];
 
   const header = rows[0].map((c) => String(c ?? '').trim());
